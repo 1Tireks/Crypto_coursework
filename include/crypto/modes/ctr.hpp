@@ -1,0 +1,45 @@
+// include/crypto/modes/ctr.hpp
+
+#pragma once
+#include "mode.hpp"
+#include <cstdint>
+
+namespace crypto {
+
+class CTRMode : public IBlockCipherMode {
+private:
+    std::shared_ptr<IBlockCipher> cipher_;
+    std::unique_ptr<IPadding> padding_;
+    ByteArray nonce_;
+    uint64_t counter_;
+    bool usePadding_;
+    size_t blockSize_;
+    
+    void incrementCounter();
+    void getCounterBlock(Byte* block);
+    
+public:
+    CTRMode(std::shared_ptr<IBlockCipher> cipher, 
+            std::unique_ptr<IPadding> padding = nullptr);
+    
+    CipherMode mode() const override { return CipherMode::CTR; }
+    std::string name() const override { return "CTR"; }
+    
+    void setCipher(std::shared_ptr<IBlockCipher> cipher) override;
+    void setPadding(std::unique_ptr<IPadding> padding) override;
+    bool usesPadding() const override { return false; }
+    
+    void setIV(const ByteArray& iv) override;
+    ByteArray getIV() const override;
+    void generateRandomIV() override;
+    
+    ByteArray encrypt(const ByteArray& plaintext) override;
+    ByteArray decrypt(const ByteArray& ciphertext) override;
+    
+    void encrypt(const Byte* input, Byte* output, size_t length) override;
+    void decrypt(const Byte* input, Byte* output, size_t length) override;
+    
+    void reset() override;
+};
+
+}
