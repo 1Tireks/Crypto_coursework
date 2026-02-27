@@ -6,6 +6,3 @@
 - DES, TripleDES, DEAL
 - AES/Rijndael (128, 192, 256 бит)
 - RSA с защитой от атаки Винера
-- RC4
-- Diffie-Hellman
-- Serpent (или другой)
