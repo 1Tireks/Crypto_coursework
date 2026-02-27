@@ -1,4 +1,3 @@
-// include/crypto/modes/cbc.hpp
 #pragma once
 #include "mode.hpp"
 
@@ -33,7 +32,7 @@ public:
     void encrypt(const Byte* input, Byte* output, size_t length) override;
     void decrypt(const Byte* input, Byte* output, size_t length) override;
     
-    void reset() override {} // CBC не имеет состояния между вызовами
+    void reset() override {}
 };
 
-} // namespace crypto
+}

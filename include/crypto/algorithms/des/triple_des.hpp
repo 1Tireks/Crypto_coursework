@@ -1,5 +1,3 @@
-// include/crypto/algorithms/des/triple_des.hpp
-
 #pragma once
 #include "../../ciphers/block_cipher.hpp"
 #include "des.hpp"
@@ -7,8 +5,8 @@
 namespace crypto {
 
 enum class TripleDESMode {
-    EDE,  // Encrypt-Decrypt-Encrypt
-    EEE   // Encrypt-Encrypt-Encrypt
+    EDE,
+    EEE
 };
 
 class TripleDES : public IBlockCipher {
@@ -29,7 +27,7 @@ public:
     size_t keySize() const override { 
         return useTwoKeys_ ? 16 : 24;
     }
-    
+
     void setKey(const Key& key) override;
     bool isValidKey(const Key& key) const override {
         return key.size() == 16 || key.size() == 24;

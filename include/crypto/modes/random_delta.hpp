@@ -1,5 +1,3 @@
-// include/crypto/modes/random_delta.hpp
-
 #pragma once
 #include "mode.hpp"
 

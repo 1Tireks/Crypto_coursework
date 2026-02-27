@@ -1,5 +1,3 @@
-// src/core/endianness.cpp
-
 #include "../../include/crypto/core/endianness.hpp"
 #include <cstring>
 #include <stdexcept>

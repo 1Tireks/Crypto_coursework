@@ -1,7 +1,3 @@
-// src/algorithms/rsa/big_integer.cpp
-// Упрощенная реализация BigInteger для RSA
-// Для полноценной реализации требуется больше кода
-
 #include "../../../include/crypto/algorithms/rsa/big_integer.hpp"
 #include "../../../include/crypto/core/exceptions.hpp"
 #include <algorithm>
@@ -11,9 +7,6 @@
 
 namespace crypto {
 namespace rsa {
-
-// Для упрощения используем базовую реализацию
-// В продакшн-коде нужна полноценная реализация с оптимизациями
 
 BigInteger::BigInteger() : negative_(false) {
     digits_.push_back(0);
@@ -128,7 +121,6 @@ bool BigInteger::operator>=(const BigInteger& other) const {
     return !(*this < other);
 }
 
-// Базовая реализация операций (упрощенная версия)
 BigInteger BigInteger::operator+(const BigInteger& other) const {
     BigInteger result = *this;
     result += other;
@@ -136,9 +128,7 @@ BigInteger BigInteger::operator+(const BigInteger& other) const {
 }
 
 BigInteger& BigInteger::operator+=(const BigInteger& other) {
-    // Упрощенная реализация для одинаковых знаков
     if (negative_ == other.negative_) {
-        // Простое сложение
         size_t maxSize = std::max(digits_.size(), other.digits_.size());
         digits_.resize(maxSize, 0);
         
@@ -154,7 +144,6 @@ BigInteger& BigInteger::operator+=(const BigInteger& other) {
             digits_.push_back(static_cast<uint32_t>(carry));
         }
     } else {
-        // Разные знаки - используем вычитание
         BigInteger temp = other;
         temp.negative_ = !temp.negative_;
         *this -= temp;
@@ -171,14 +160,11 @@ BigInteger BigInteger::operator-(const BigInteger& other) const {
 }
 
 BigInteger& BigInteger::operator-=(const BigInteger& other) {
-    // Упрощенная реализация
     if (negative_ != other.negative_) {
-        // Разные знаки - используем сложение
         BigInteger temp = other;
         temp.negative_ = !temp.negative_;
         *this += temp;
     } else {
-        // Одинаковые знаки
         int cmp = compareAbsolute(other);
         if (cmp == 0) {
             *this = BigInteger(0);
@@ -207,7 +193,6 @@ BigInteger& BigInteger::operator-=(const BigInteger& other) {
 }
 
 BigInteger BigInteger::operator*(const BigInteger& other) const {
-    // Упрощенное умножение (не оптимальное, но рабочее)
     BigInteger result(0);
     
     for (size_t i = 0; i < digits_.size(); ++i) {
@@ -252,7 +237,6 @@ std::pair<BigInteger, BigInteger> BigInteger::divideWithRemainder(
         throw CryptoException("Division by zero");
     }
     
-    // Упрощенное деление (бинарное деление)
     BigInteger quotient(0);
     BigInteger remainder = dividend;
     remainder.negative_ = false;
@@ -263,7 +247,6 @@ std::pair<BigInteger, BigInteger> BigInteger::divideWithRemainder(
         BigInteger temp = div;
         BigInteger multiplier(1);
         
-        // Находим максимальный сдвиг
         while ((temp << 1) <= remainder) {
             temp = temp << 1;
             multiplier = multiplier << 1;
@@ -368,7 +351,6 @@ BigInteger BigInteger::gcd(const BigInteger& a, const BigInteger& b) {
 }
 
 BigInteger BigInteger::modInv(const BigInteger& a, const BigInteger& m) {
-    // Расширенный алгоритм Евклида
     BigInteger x0(0), x1(1);
     BigInteger a_copy = a;
     BigInteger m_copy = m;
@@ -399,7 +381,6 @@ BigInteger BigInteger::modInv(const BigInteger& a, const BigInteger& m) {
 }
 
 std::string BigInteger::toString() const {
-    // Упрощенная реализация - для небольших чисел
     if (isZero()) return "0";
     
     std::string result;
@@ -431,7 +412,6 @@ std::string BigInteger::toHex() const {
         result += buf;
     }
     
-    // Убираем ведущие нули
     size_t start = 0;
     while (start < result.size() - 1 && result[start] == '0') {
         start++;
@@ -490,11 +470,10 @@ BigInteger BigInteger::random(size_t bits) {
         uint32_t mask = (1ULL << remainingBits) - 1;
         result.digits_[fullDigits] = dis(gen) & mask;
         if (result.digits_[fullDigits] == 0 && bits > 0) {
-            result.digits_[fullDigits] = 1; // Убеждаемся, что число не ноль
+            result.digits_[fullDigits] = 1;
         }
     }
     
-    // Устанавливаем старший бит для правильной длины
     if (!result.digits_.empty() && remainingBits > 0) {
         result.digits_.back() |= (1ULL << (remainingBits - 1));
     }
@@ -544,6 +523,6 @@ std::vector<uint8_t> BigInteger::toBytes() const {
     return result;
 }
 
-} // namespace rsa
-} // namespace crypto
+}
+}
 

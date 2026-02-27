@@ -1,4 +1,3 @@
-// src/math/continued_fraction.cpp
 #include "../../include/crypto/math/continued_fraction.hpp"
 #include <algorithm>
 
@@ -31,13 +30,11 @@ std::vector<std::pair<uint64_t, uint64_t>> convergents(const std::vector<uint64_
         return result;
     }
     
-    // Первая подходящая дробь
     uint64_t h0 = 1, h1 = cf[0];
     uint64_t k0 = 0, k1 = 1;
     
     result.push_back({h1, k1});
     
-    // Вычисляем остальные подходящие дроби
     for (size_t i = 1; i < cf.size(); ++i) {
         uint64_t h2 = cf[i] * h1 + h0;
         uint64_t k2 = cf[i] * k1 + k0;
@@ -58,6 +55,6 @@ std::vector<std::pair<uint64_t, uint64_t>> convergentsFromFraction(uint64_t a, u
     return convergents(cf);
 }
 
-} // namespace math
-} // namespace crypto
+}
+}
 

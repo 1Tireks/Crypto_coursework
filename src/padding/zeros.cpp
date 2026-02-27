@@ -1,5 +1,3 @@
-// src/padding/zeros.cpp
-
 #include "../../include/crypto/padding/padding.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include <algorithm>

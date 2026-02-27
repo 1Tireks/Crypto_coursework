@@ -1,5 +1,3 @@
-// src/algorithms/des/des.cpp
-
 #include "../../../include/crypto/algorithms/des/des.hpp"
 #include "../../../include/crypto/core/utils.hpp"
 #include "../../../include/crypto/core/endianness.hpp"

@@ -1,5 +1,3 @@
-// include/crypto/core/utils.hpp
-
 #pragma once
 #include "types.hpp"
 #include <string>
@@ -39,14 +37,6 @@ void xorBlocksInPlace(Byte* target, const Byte* source, size_t size);
 inline void copyBlock(const Byte* src, Byte* dst, size_t size) {
     std::copy(src, src + size, dst);
 }
-
-bool isValidDESKey(const Key& key);
-bool isValidTripleDESKey(const Key& key);
-bool isValidDEALKey(const Key& key);
-
-bool isWeakDESKey(const Key& key);
-bool isSemiWeakDESKey(const Key& key);
-uint64_t extractDESKeyBits(const Byte* keyData);
 
 template<size_t From, size_t To>
 inline Block<To> resizeBlock(const Block<From>& block) {

@@ -1,4 +1,3 @@
-// src/modes/ecb.cpp
 #include "../../include/crypto/modes/ecb.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"

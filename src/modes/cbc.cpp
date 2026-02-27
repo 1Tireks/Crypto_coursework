@@ -1,5 +1,3 @@
-// src/modes/cbc.cpp
-
 #include "../../include/crypto/modes/cbc.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"
@@ -92,14 +90,11 @@ void CBCMode::encrypt(const Byte* input, Byte* output, size_t length) {
         const Byte* blockInput = input + i * blockSize_;
         Byte* blockOutput = output + i * blockSize_;
         ByteArray xored(blockSize_);
-        
-        // XOR с предыдущим зашифрованным блоком (или IV для первого блока)
+
         utils::xorBlocks(blockInput, currentIV.data(), xored.data(), blockSize_);
         
-        // Шифруем
         cipher_->encryptBlock(xored.data(), blockOutput);
         
-        // Обновляем текущий IV для следующего блока
         currentIV.assign(blockOutput, blockOutput + blockSize_);
     }
 }

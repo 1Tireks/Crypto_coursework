@@ -1,5 +1,3 @@
-// src/modes/random_delta.cpp
-
 #include "../../include/crypto/modes/random_delta.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"

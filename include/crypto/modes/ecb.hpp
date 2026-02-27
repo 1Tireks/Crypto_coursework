@@ -1,5 +1,3 @@
-// include/crypto/modes/ecb.hpp
-
 #pragma once
 #include "mode.hpp"
 

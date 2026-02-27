@@ -1,5 +1,3 @@
-// src/io/async_processor.cpp
-
 #include "../../include/crypto/io/async_processor.hpp"
 
 namespace crypto {

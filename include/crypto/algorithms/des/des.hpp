@@ -1,5 +1,3 @@
-// include/crypto/algorithms/des/des.hpp
-
 #pragma once
 #include "../../ciphers/block_cipher.hpp"
 #include "des_constants.hpp"

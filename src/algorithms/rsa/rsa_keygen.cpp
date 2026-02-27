@@ -1,28 +1,23 @@
-// src/crypto/algorithms/rsa/rsa_keygen.cpp
 #include "../../../include/crypto/algorithms/rsa/rsa_keygen.hpp"
 #include "../../../include/crypto/algorithms/rsa/big_integer.hpp"
 #include "../../../include/crypto/core/exceptions.hpp"
 #include "../../../include/crypto/math/prime.hpp"
 #include <random>
 #include <cmath>
+#include <algorithm>
 
 namespace crypto {
 namespace rsa {
 
 BigInteger RSAKeyGenerator::generatePrime(size_t bits) {
-    // Для маленьких ключей (<= 32 бит) используем оптимизированный подход
     if (bits <= 32) {
-        // Для очень маленьких ключей используем uint64_t через math::generatePrime
         uint64_t prime = crypto::math::generatePrime(bits);
         return BigInteger(static_cast<int64_t>(prime));
     }
     
-    // Используем BigInteger::random для генерации случайного числа
-    // и проверяем на простоту (упрощенная проверка для скорости)
-    for (int attempts = 0; attempts < 500; ++attempts) { // Уменьшили количество попыток
+    for (int attempts = 0; attempts < 1000; ++attempts) {
         BigInteger candidate = BigInteger::random(bits);
         
-        // Простая проверка на четность
         if (candidate.isEven()) {
             BigInteger one(static_cast<int64_t>(1));
             candidate = candidate + one;
@@ -31,14 +26,11 @@ BigInteger RSAKeyGenerator::generatePrime(size_t bits) {
         BigInteger two(static_cast<int64_t>(2));
         BigInteger three(static_cast<int64_t>(3));
         
-        // Упрощенная проверка простоты
         if (candidate == two || candidate == three) {
             return candidate;
         }
         
-        // Проверяем делимость на маленькие простые числа (уменьшили количество проверок для скорости)
         bool isPrime = true;
-        // Проверяем только первые несколько простых чисел для скорости тестов
         int smallPrimes[] = {3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
         for (int prime : smallPrimes) {
             BigInteger divisor(static_cast<int64_t>(prime));
@@ -50,9 +42,15 @@ BigInteger RSAKeyGenerator::generatePrime(size_t bits) {
         }
         
         if (isPrime) {
-            // Для тестов принимаем число как простое после проверки маленьких делителей
-            // В реальном применении нужен тест Миллера-Рабина
-            return candidate;
+            
+            
+            if (bits > 32) {
+                if (isPrimeMillerRabin(candidate, 1)) {
+                    return candidate;
+                }
+            } else {
+                return candidate;
+            }
         }
     }
     
@@ -60,15 +58,12 @@ BigInteger RSAKeyGenerator::generatePrime(size_t bits) {
 }
 
 BigInteger RSAKeyGenerator::choosePublicExponent(const BigInteger& phi) {
-    // Используем стандартную экспоненту 65537 (2^16 + 1)
     BigInteger e(static_cast<int64_t>(65537));
     
-    // Проверяем, что e взаимно простое с phi
     if (BigInteger::gcd(e, phi) == BigInteger(1)) {
         return e;
     }
     
-    // Если не подходит, пробуем 3, 5, 17 и другие маленькие нечетные числа
     BigInteger three(static_cast<int64_t>(3));
     BigInteger five(static_cast<int64_t>(5));
     BigInteger seventeen(static_cast<int64_t>(17));
@@ -83,9 +78,8 @@ BigInteger RSAKeyGenerator::choosePublicExponent(const BigInteger& phi) {
         return seventeen;
     }
     
-    // Если не подходит, ищем следующее простое число (с ограничением для скорости)
     e = three;
-    BigInteger maxIterations(static_cast<int64_t>(1000)); // Ограничиваем итерации
+    BigInteger maxIterations(static_cast<int64_t>(10000)); 
     BigInteger iterations(static_cast<int64_t>(0));
     
     while (e < phi && iterations < maxIterations) {
@@ -100,13 +94,11 @@ BigInteger RSAKeyGenerator::choosePublicExponent(const BigInteger& phi) {
 }
 
 bool RSAKeyGenerator::satisfiesWienerProtection(const BigInteger& d, const BigInteger& n) {
-    // Защита от атаки Винера: d > n^(1/4) / 3
-    // Вычисляем n^(1/4)
     size_t nBits = n.bitLength();
     size_t quarterBits = nBits / 4;
     
     BigInteger threshold = BigInteger::random(quarterBits);
-    threshold = threshold >> 2; // Приблизительно n^(1/4)
+    threshold = threshold >> 2;
     
     BigInteger three(3);
     threshold = threshold / three;
@@ -119,12 +111,9 @@ BigInteger RSAKeyGenerator::computePrivateExponentSecure(
     
     BigInteger d = BigInteger::modInv(e, phi);
     
-    // Если d слишком мал, увеличиваем его
-    // Добавляем phi до тех пор, пока условие не выполнится
     while (!satisfiesWienerProtection(d, n)) {
         d += phi;
         if (d >= phi) {
-            // Защита от бесконечного цикла
             break;
         }
     }
@@ -139,22 +128,17 @@ RSAKey RSAKeyGenerator::generate(size_t keySizeBits) {
     
     size_t halfBits = keySizeBits / 2;
     
-    // Генерируем два простых числа
     BigInteger p = generatePrime(halfBits);
     BigInteger q = generatePrime(halfBits);
     
-    // Вычисляем n = p * q
     BigInteger n = p * q;
     
-    // Вычисляем φ(n) = (p-1)(q-1)
     BigInteger p1 = p - BigInteger(1);
     BigInteger q1 = q - BigInteger(1);
     BigInteger phi = p1 * q1;
     
-    // Выбираем открытую экспоненту
     BigInteger e = choosePublicExponent(phi);
     
-    // Вычисляем секретную экспоненту
     BigInteger d = BigInteger::modInv(e, phi);
     
     return RSAKey(n, e, d, p, q);
@@ -167,22 +151,17 @@ RSAKey RSAKeyGenerator::generateSecure(size_t keySizeBits) {
     
     size_t halfBits = keySizeBits / 2;
     
-    // Генерируем два простых числа
     BigInteger p = generatePrime(halfBits);
     BigInteger q = generatePrime(halfBits);
     
-    // Вычисляем n = p * q
     BigInteger n = p * q;
     
-    // Вычисляем φ(n) = (p-1)(q-1)
     BigInteger p1 = p - BigInteger(1);
     BigInteger q1 = q - BigInteger(1);
     BigInteger phi = p1 * q1;
     
-    // Выбираем открытую экспоненту
     BigInteger e = choosePublicExponent(phi);
     
-    // Вычисляем секретную экспоненту с защитой от Винера
     BigInteger d = computePrivateExponentSecure(e, phi, n);
     
     return RSAKey(n, e, d, p, q);
@@ -190,12 +169,68 @@ RSAKey RSAKeyGenerator::generateSecure(size_t keySizeBits) {
 
 bool RSAKeyGenerator::isVulnerableToWiener(const RSAKey& key) {
     if (!key.isPrivate()) {
-        return false; // Невозможно проверить без приватного ключа
+        return false;
     }
     
     return !satisfiesWienerProtection(key.d, key.n);
 }
 
-} // namespace rsa
-} // namespace crypto
+bool RSAKeyGenerator::isPrimeMillerRabin(const BigInteger& n, int k) {
+    if (n < BigInteger(2)) return false;
+    if (n == BigInteger(2) || n == BigInteger(3)) return true;
+    if (n.isEven()) return false;
+    
+    
+    BigInteger d = n - BigInteger(1);
+    int r = 0;
+    while (d.isEven()) {
+        d = d >> 1;
+        r++;
+    }
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    
+    BigInteger nMinus2 = n - BigInteger(2);
+    BigInteger two(2);
+    
+    
+    
+    
+    int smallBases[] = {2, 3, 5};
+    int numBases = std::min(k, 3);
+    
+    for (int i = 0; i < numBases; ++i) {
+        BigInteger a(smallBases[i]);
+        
+        
+        if (a >= nMinus2) {
+            continue;
+        }
+        
+        BigInteger x = BigInteger::modPow(a, d, n);
+        
+        if (x == BigInteger(1) || x == nMinus2) {
+            continue;
+        }
+        
+        bool composite = true;
+        for (int j = 0; j < r - 1; ++j) {
+            x = BigInteger::modPow(x, two, n);
+            if (x == nMinus2) {
+                composite = false;
+                break;
+            }
+        }
+        
+        if (composite) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+}
+}
 

@@ -1,5 +1,3 @@
-// include/crypto/modes/cfb.hpp
-
 #pragma once
 #include "mode.hpp"
 
@@ -18,7 +16,7 @@ private:
 public:
     CFBMode(std::shared_ptr<IBlockCipher> cipher, 
             std::unique_ptr<IPadding> padding = nullptr,
-            size_t segmentSizeBits = 0); // 0 = использовать размер блока
+            size_t segmentSizeBits = 0);
     
     CipherMode mode() const override { return CipherMode::CFB; }
     std::string name() const override { 

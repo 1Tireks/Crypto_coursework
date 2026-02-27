@@ -1,5 +1,3 @@
-// src/modes/mode_factory.cpp
-
 #include "../../include/crypto/modes/mode.hpp"
 #include "../../include/crypto/modes/ecb.hpp"
 #include "../../include/crypto/modes/cbc.hpp"

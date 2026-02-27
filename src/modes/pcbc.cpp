@@ -1,5 +1,3 @@
-// src/modes/pcbc.cpp
-
 #include "../../include/crypto/modes/pcbc.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"

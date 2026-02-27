@@ -1,5 +1,3 @@
-// src/algorithms/deal/deal.cpp
-
 #include "../../../include/crypto/algorithms/deal/deal.hpp"
 #include "../../../include/crypto/core/utils.hpp"
 #include <cstring>

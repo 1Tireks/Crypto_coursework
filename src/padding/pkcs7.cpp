@@ -1,5 +1,3 @@
-// src/padding/pkcs7.cpp
-
 #include "../../include/crypto/padding/padding.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include <algorithm>

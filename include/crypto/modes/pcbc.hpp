@@ -1,4 +1,3 @@
-// include/crypto/modes/pcbc.hpp
 #pragma once
 #include "mode.hpp"
 
@@ -36,4 +35,4 @@ public:
     void reset() override;
 };
 
-} // namespace crypto
+}

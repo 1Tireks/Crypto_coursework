@@ -1,5 +1,3 @@
-// src/core/exceptions.cpp
-
 #include "../../include/crypto/core/exceptions.hpp"
 
 namespace crypto {

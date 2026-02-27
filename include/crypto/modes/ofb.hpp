@@ -1,4 +1,3 @@
-// include/crypto/modes/ofb.hpp
 #pragma once
 #include "mode.hpp"
 
@@ -23,7 +22,7 @@ public:
     
     void setCipher(std::shared_ptr<IBlockCipher> cipher) override;
     void setPadding(std::unique_ptr<IPadding> padding) override;
-    bool usesPadding() const override { return false; } // OFB потоковый
+    bool usesPadding() const override { return false; }
     
     void setIV(const ByteArray& iv) override;
     ByteArray getIV() const override;
@@ -42,4 +41,4 @@ private:
     void generateMoreKeystream();
 };
 
-} // namespace crypto
+}

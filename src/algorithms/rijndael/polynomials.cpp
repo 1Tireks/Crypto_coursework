@@ -1,4 +1,3 @@
-// src/algorithms/rijndael/polynomials.cpp
 #include "../../../include/crypto/algorithms/rijndael/polynomials.hpp"
 
 namespace crypto {
@@ -31,7 +30,7 @@ Polynomial Polynomial::operator*(GaloisField::Element scalar) const {
 }
 
 Polynomial Polynomial::operator*(const Polynomial& other) const {
-    // Обычное умножение полиномов (до степени 6)
+    
     std::array<GaloisField::Element, 7> temp{};
     
     for (size_t i = 0; i < DEGREE; ++i) {
@@ -52,8 +51,6 @@ Polynomial Polynomial::operator*(const Polynomial& other) const {
 }
 
 Polynomial Polynomial::multiplyMod(const Polynomial& other) const {
-    // Умножение по модулю x^4 + 1
-    // В GF(2^8) x^4 = -1 = 1 (так как -1 = 1 в поле характеристики 2)
     Polynomial result;
     
     for (size_t i = 0; i < DEGREE; ++i) {
@@ -81,6 +78,6 @@ GaloisField::Element Polynomial::evaluate(GaloisField::Element x) const {
     return result;
 }
 
-} // namespace rijndael
-} // namespace crypto
+}
+}
 

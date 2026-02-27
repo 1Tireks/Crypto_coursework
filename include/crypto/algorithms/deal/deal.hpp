@@ -1,5 +1,3 @@
-// include/crypto/algorithms/deal/deal.hpp
-
 #pragma once
 #include "../../ciphers/block_cipher.hpp"
 #include "../des/des.hpp"

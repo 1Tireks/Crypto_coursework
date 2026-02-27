@@ -1,5 +1,3 @@
-// src/padding/ansix923.cpp
-
 #include "../../include/crypto/padding/padding.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include <algorithm>

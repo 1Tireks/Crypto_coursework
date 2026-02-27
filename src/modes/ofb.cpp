@@ -1,5 +1,3 @@
-// src/modes/ofb.cpp
-
 #include "../../include/crypto/modes/ofb.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"

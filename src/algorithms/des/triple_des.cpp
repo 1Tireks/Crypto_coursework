@@ -1,5 +1,3 @@
-// src/algorithms/des/triple_des.cpp
-
 #include "../../../include/crypto/algorithms/des/triple_des.hpp"
 #include "../../../include/crypto/core/utils.hpp"
 
@@ -39,11 +37,11 @@ void TripleDES::encryptBlock(const Byte* input, Byte* output) {
     
     switch (mode_) {
         case TripleDESMode::EDE:
-            // K1
+            
             des1_.encryptBlock(input, intermediate);
-            // K2
+            
             des2_.decryptBlock(intermediate, intermediate);
-            // K3
+            
             des3_.encryptBlock(intermediate, output);
             break;
             
@@ -60,11 +58,11 @@ void TripleDES::decryptBlock(const Byte* input, Byte* output) {
     
     switch (mode_) {
         case TripleDESMode::EDE:
-            // K3
+            
             des3_.decryptBlock(input, intermediate);
-            // K2
+            
             des2_.encryptBlock(intermediate, intermediate);
-            // K1
+            
             des1_.decryptBlock(intermediate, output);
             break;
             

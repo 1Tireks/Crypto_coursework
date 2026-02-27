@@ -1,5 +1,3 @@
-// src/modes/cfb.cpp
-
 #include "../../include/crypto/modes/cfb.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"
@@ -21,7 +19,6 @@ CFBMode::CFBMode(std::shared_ptr<IBlockCipher> cipher,
     
     blockSize_ = cipher_->blockSize();
     
-    // Определяем размер сегмента
     if (segmentSizeBits == 0 || segmentSizeBits > blockSize_ * 8) {
         segmentSize_ = blockSize_;
     } else {

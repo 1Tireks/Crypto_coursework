@@ -1,4 +1,4 @@
-// src/math/random.cpp
+
 #include "../../include/crypto/math/random.hpp"
 #include <random>
 
@@ -22,6 +22,6 @@ Key randomKey(size_t size) {
     return Key(randomBytes(size));
 }
 
-} // namespace math
-} // namespace crypto
+}
+}
 

@@ -1,4 +1,3 @@
-// include/crypto/modes/asymmetric_cipher_mode.hpp
 #pragma once
 #include "mode.hpp"
 #include "../ciphers/asymmetric_cipher.hpp"
@@ -6,13 +5,6 @@
 
 namespace crypto {
 
-/**
- * Адаптер для использования асимметричных шифров (IAsymmetricCipher) 
- * с системой режимов шифрования (IBlockCipherMode)
- * 
- * Асимметричные шифры работают с блоками фиксированного размера,
- * определяемым размером ключа. Паддинг обычно встроен в алгоритм (OAEP, PKCS#1).
- */
 class AsymmetricCipherMode : public IBlockCipherMode {
 private:
     std::shared_ptr<IAsymmetricCipher> cipher_;
@@ -20,16 +12,16 @@ private:
 public:
     explicit AsymmetricCipherMode(std::shared_ptr<IAsymmetricCipher> cipher);
     
-    CipherMode mode() const override { return CipherMode::ECB; } // Асимметричные шифры работают как ECB
+    CipherMode mode() const override { return CipherMode::ECB; }
     std::string name() const override;
     
     void setCipher(std::shared_ptr<IBlockCipher> cipher) override;
     void setPadding(std::unique_ptr<IPadding> padding) override;
-    bool usesPadding() const override { return false; } // Паддинг встроен в алгоритм
+    bool usesPadding() const override { return false; }
     
-    void setIV(const ByteArray& iv) override; // Игнорируется для асимметричных шифров
-    ByteArray getIV() const override { return ByteArray(); } // Асимметричные шифры не используют IV
-    void generateRandomIV() override; // Игнорируется для асимметричных шифров
+    void setIV(const ByteArray& iv) override;
+    ByteArray getIV() const override { return ByteArray(); }
+    void generateRandomIV() override;
     
     ByteArray encrypt(const ByteArray& plaintext) override;
     ByteArray decrypt(const ByteArray& ciphertext) override;
@@ -39,9 +31,8 @@ public:
     
     void reset() override;
     
-    // Получить асимметричный шифр
     std::shared_ptr<IAsymmetricCipher> getAsymmetricCipher() const { return cipher_; }
 };
 
-} // namespace crypto
+}
 

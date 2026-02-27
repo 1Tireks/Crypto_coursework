@@ -1,5 +1,3 @@
-// include/crypto/modes/ctr.hpp
-
 #pragma once
 #include "mode.hpp"
 #include <cstdint>

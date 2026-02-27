@@ -1,5 +1,3 @@
-// include/crypto/core/endianness.hpp
-
 #pragma once
 #include "types.hpp"
 #include <cstdint>

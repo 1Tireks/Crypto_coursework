@@ -1,5 +1,3 @@
-// src/modes/ctr.cpp
-
 #include "../../include/crypto/modes/ctr.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"
@@ -56,7 +54,7 @@ ByteArray CTRMode::getIV() const {
 void CTRMode::generateRandomIV() {
     size_t nonceSize = blockSize_ / 2;
     nonce_ = math::randomBytes(nonceSize);
-    nonce_.resize(blockSize_, 0); // Дополняем нулями для счетчика
+    nonce_.resize(blockSize_, 0);
     counter_ = 0;
 }
 

@@ -1,5 +1,3 @@
-// src/algorithms/rijndael/rijndael.cpp
-// Базовая реализация Rijndael/AES (упрощенная версия)
 #include "../../../include/crypto/algorithms/rijndael/rijndael.hpp"
 #include "../../../include/crypto/algorithms/rijndael/aes_constants.hpp"
 #include "../../../include/crypto/core/exceptions.hpp"
@@ -70,21 +68,21 @@ void Rijndael::invSubBytes() {
 
 void Rijndael::shiftRows() {
     uint8_t temp;
-    // Row 1
+    
     temp = state_[1]; state_[1] = state_[5]; state_[5] = state_[9]; state_[9] = state_[13]; state_[13] = temp;
-    // Row 2
+    
     temp = state_[2]; state_[2] = state_[10]; state_[10] = temp; temp = state_[6]; state_[6] = state_[14]; state_[14] = temp;
-    // Row 3
+    
     temp = state_[3]; state_[3] = state_[15]; state_[15] = state_[11]; state_[11] = state_[7]; state_[7] = temp;
 }
 
 void Rijndael::invShiftRows() {
     uint8_t temp;
-    // Row 1
+    
     temp = state_[13]; state_[13] = state_[9]; state_[9] = state_[5]; state_[5] = state_[1]; state_[1] = temp;
-    // Row 2
+    
     temp = state_[2]; state_[2] = state_[10]; state_[10] = temp; temp = state_[6]; state_[6] = state_[14]; state_[14] = temp;
-    // Row 3
+    
     temp = state_[3]; state_[3] = state_[7]; state_[7] = state_[11]; state_[11] = state_[15]; state_[15] = temp;
 }
 
@@ -132,11 +130,10 @@ uint32_t Rijndael::rotWord(uint32_t word) {
 }
 
 void Rijndael::keyExpansion(const Byte* key) {
-    size_t nk = keyBytes_ / 4; // Количество 32-битных слов в ключе
+    size_t nk = keyBytes_ / 4;
     size_t totalWords = (numRounds_ + 1) * 4;
     roundKeys_.resize(totalWords);
     
-    // Копируем исходный ключ
     for (size_t i = 0; i < nk; ++i) {
         roundKeys_[i] = (static_cast<uint32_t>(key[4*i]) << 24) |
                         (static_cast<uint32_t>(key[4*i+1]) << 16) |
@@ -144,7 +141,6 @@ void Rijndael::keyExpansion(const Byte* key) {
                         static_cast<uint32_t>(key[4*i+3]);
     }
     
-    // Генерируем остальные раундовые ключи
     for (size_t i = nk; i < totalWords; ++i) {
         uint32_t temp = roundKeys_[i-1];
         if (i % nk == 0) {
@@ -194,6 +190,6 @@ void Rijndael::decryptBlock(const Byte* input, Byte* output) {
     stateToBlock(output);
 }
 
-} // namespace rijndael
-} // namespace crypto
+}
+}
 

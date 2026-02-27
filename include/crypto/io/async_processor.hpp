@@ -1,5 +1,3 @@
-// include/crypto/io/async_processor.hpp
-
 #pragma once
 #include <future>
 #include <queue>
@@ -11,7 +9,6 @@
 
 namespace crypto {
 
-// Класс ThreadPool для выполнения задач в отдельных потоках
 class ThreadPool {
 private:
     std::vector<std::thread> workers_;

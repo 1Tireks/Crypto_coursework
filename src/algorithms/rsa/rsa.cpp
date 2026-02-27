@@ -1,4 +1,3 @@
-// src/algorithms/rsa/rsa.cpp
 #include "../../../include/crypto/algorithms/rsa/rsa.hpp"
 #include "../../../include/crypto/core/exceptions.hpp"
 #include <algorithm>
@@ -38,8 +37,26 @@ void RSA::setKey(const RSAKey& key) {
     }
 }
 
+size_t RSA::blockSize() const {
+    return getBlockSize();
+}
+
+size_t RSA::keySize() const {
+    if (key_.n.isZero()) {
+        return 0;
+    }
+    return (key_.n.bitLength() + 7) / 8;
+}
+
+void RSA::setKey(const Key& key) {
+    throw CryptoException("RSA: Use setPublicKey() or setKey(const RSAKey&) instead of setKey(const Key&)");
+}
+
+bool RSA::isValidKey(const Key& key) const {
+    return false;
+}
+
 size_t RSA::getBlockSize() const {
-    // Размер блока = размер модуля в байтах - 1 (для паддинга)
     size_t modBits = key_.n.bitLength();
     return (modBits + 7) / 8 - 1;
 }
@@ -71,7 +88,6 @@ ByteArray RSA::encryptBlock(const ByteArray& block) const {
     
     ByteArray result = c.toBytes();
     
-    // Дополняем до размера модуля
     size_t modSize = (key_.n.bitLength() + 7) / 8;
     while (result.size() < modSize) {
         result.insert(result.begin(), 0);
@@ -90,7 +106,6 @@ ByteArray RSA::decryptBlock(const ByteArray& block) const {
     
     ByteArray result = m.toBytes();
     
-    // Убираем ведущие нули, но оставляем минимум один байт
     while (result.size() > 1 && result[0] == 0) {
         result.erase(result.begin());
     }
@@ -106,7 +121,6 @@ ByteArray RSA::encrypt(const ByteArray& plaintext) {
     size_t blockSize = getBlockSize();
     ByteArray result;
     
-    // Разбиваем на блоки и шифруем
     for (size_t i = 0; i < plaintext.size(); i += blockSize) {
         size_t chunkSize = std::min(blockSize, plaintext.size() - i);
         ByteArray block(plaintext.begin() + i, plaintext.begin() + i + chunkSize);
@@ -130,7 +144,6 @@ ByteArray RSA::decrypt(const ByteArray& ciphertext) {
     
     ByteArray result;
     
-    // Разбиваем на блоки и расшифровываем
     for (size_t i = 0; i < ciphertext.size(); i += modSize) {
         ByteArray block(ciphertext.begin() + i, ciphertext.begin() + i + modSize);
         ByteArray decrypted = decryptBlock(block);
@@ -141,11 +154,9 @@ ByteArray RSA::decrypt(const ByteArray& ciphertext) {
 }
 
 ByteArray RSA::padOAEP(const ByteArray& data) const {
-    // Упрощенная реализация OAEP (для демонстрации)
-    // В реальной реализации нужна более сложная схема
     size_t blockSize = getBlockSize();
     if (data.size() >= blockSize) {
-        return data; // Уже достаточно большой блок
+        return data;
     }
     
     ByteArray padded = data;
@@ -156,7 +167,6 @@ ByteArray RSA::padOAEP(const ByteArray& data) const {
 }
 
 ByteArray RSA::unpadOAEP(const ByteArray& padded) const {
-    // Упрощенная реализация
     if (padded.empty()) return {};
     
     size_t dataSize = padded.back();
@@ -167,6 +177,6 @@ ByteArray RSA::unpadOAEP(const ByteArray& padded) const {
     return ByteArray(padded.begin(), padded.begin() + dataSize);
 }
 
-} // namespace rsa
-} // namespace crypto
+}
+}
 

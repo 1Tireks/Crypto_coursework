@@ -1,5 +1,3 @@
-// include/crypto/padding/padding.hpp
-
 #pragma once
 #include "../core/types.hpp"
 #include <memory>

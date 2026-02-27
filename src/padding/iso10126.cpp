@@ -1,5 +1,3 @@
-// src/padding/iso10126.cpp
-
 #include "../../include/crypto/padding/padding.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include "../../include/crypto/math/random.hpp"

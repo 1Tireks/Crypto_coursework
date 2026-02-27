@@ -1,4 +1,4 @@
-// src/math/prime.cpp
+
 #include "../../include/crypto/math/prime.hpp"
 #include "../../include/crypto/core/utils.hpp"
 #include <random>
@@ -14,7 +14,6 @@ bool isPrime(uint64_t n) {
     if (n == 2 || n == 3) return true;
     if (n % 2 == 0 || n % 3 == 0) return false;
     
-    // Проверка делителей вида 6k±1
     for (uint64_t i = 5; i * i <= n; i += 6) {
         if (n % i == 0 || n % (i + 2) == 0) {
             return false;
@@ -23,7 +22,6 @@ bool isPrime(uint64_t n) {
     return true;
 }
 
-// Модульное возведение в степень (a^b mod m)
 static uint64_t modPow(uint64_t base, uint64_t exp, uint64_t mod) {
     uint64_t result = 1;
     base = base % mod;
@@ -42,7 +40,6 @@ bool isPrimeMillerRabin(uint64_t n, int k) {
     if (n == 2 || n == 3) return true;
     if (n % 2 == 0) return false;
     
-    // Записываем n-1 = d * 2^r
     uint64_t d = n - 1;
     int r = 0;
     while (d % 2 == 0) {
@@ -81,7 +78,7 @@ bool isPrimeMillerRabin(uint64_t n, int k) {
 
 uint64_t generatePrime(uint64_t minBits) {
     if (minBits > 32) {
-        minBits = 32; // Ограничение для uint64_t
+        minBits = 32;
     }
     
     uint64_t min = 1ULL << (minBits - 1);
@@ -99,7 +96,6 @@ uint64_t generatePrimeInRange(uint64_t min, uint64_t max) {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<uint64_t> dis(min, max);
     
-    // Ищем простое число, начиная с нечетных
     if (min % 2 == 0) min++;
     
     for (int attempts = 0; attempts < 10000; ++attempts) {
@@ -118,7 +114,6 @@ uint64_t generatePrimeInRange(uint64_t min, uint64_t max) {
         }
     }
     
-    // Если не нашли случайно, перебираем последовательно
     for (uint64_t n = min; n <= max; n += 2) {
         if (isPrimeMillerRabin(n)) {
             return n;
@@ -152,6 +147,6 @@ std::vector<uint64_t> sieveOfEratosthenes(uint64_t limit) {
     return primes;
 }
 
-} // namespace math
-} // namespace crypto
+}
+}
 

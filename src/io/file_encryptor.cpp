@@ -1,5 +1,3 @@
-// src/io/file_encryptor.cpp
-
 #include "../../include/crypto/io/file_encryptor.hpp"
 #include "../../include/crypto/io/async_processor.hpp"
 #include <fstream>
@@ -44,7 +42,7 @@ bool AsyncFileEncryptor::encryptFileSync(const std::string& inputFile,
             return false;
         }
         
-        // Читаем файл блоками и шифруем
+        
         ByteArray buffer(chunkSize_);
         while (input.read(reinterpret_cast<char*>(buffer.data()), chunkSize_)) {
             size_t bytesRead = input.gcount();
@@ -57,7 +55,7 @@ bool AsyncFileEncryptor::encryptFileSync(const std::string& inputFile,
                         encrypted.size());
         }
         
-        // Последний блок
+        
         size_t bytesRead = input.gcount();
         if (bytesRead > 0) {
             buffer.resize(bytesRead);
@@ -82,7 +80,7 @@ bool AsyncFileEncryptor::decryptFileSync(const std::string& inputFile,
             return false;
         }
         
-        // Читаем файл блоками и дешифруем
+        
         ByteArray buffer(chunkSize_);
         while (input.read(reinterpret_cast<char*>(buffer.data()), chunkSize_)) {
             size_t bytesRead = input.gcount();
@@ -95,7 +93,7 @@ bool AsyncFileEncryptor::decryptFileSync(const std::string& inputFile,
                         decrypted.size());
         }
         
-        // Последний блок
+        
         size_t bytesRead = input.gcount();
         if (bytesRead > 0) {
             buffer.resize(bytesRead);
